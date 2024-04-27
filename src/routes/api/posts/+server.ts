@@ -2,11 +2,12 @@ import { error } from "@sveltejs/kit";
 import dotenv from 'dotenv';
 import { json } from "@sveltejs/kit";
 import * as cheerio from 'cheerio';
+import he from 'he';
 dotenv.config();
 
 function getExcerpt(postContent: string) {
   if (!postContent) return '';
-  return postContent.replace(/(<([^>]+)>)/ig, '').slice(0, 40);
+  return he.decode(postContent).replace(/(<([^>]+)>)/ig, '').slice(0, 40);
 }
 
 function getImageSrc(postContent: string) {
@@ -47,10 +48,20 @@ export async function GET(event:any) {
 
 
 export async function POST(event:any) {
-  const reqBody = await event.request.json();
-  const body = typeof reqBody === 'string' ? reqBody : JSON.stringify(reqBody);
+  const reqBody = await event.request.formData();
+  const title = reqBody.get('title');
+  const content = reqBody.get('content');
+
+  if (!title || !content) {
+    error(400, 'Title and content are required');
+  }
+
   const jwtCookieName = 'ob_secure_auth';
   const jwtCookie = event.cookies.get(jwtCookieName);
+
+  if (!jwtCookie) {
+    error(400, 'Cookie does not exist.');
+  }
 
   const postResponse = await fetch(`${process.env.APIENDPOINT}/api/posts`, {
     method: 'POST',
@@ -60,7 +71,7 @@ export async function POST(event:any) {
       'APIToken': `Token ${process.env.APITOKEN}`,
       'Authorization': `Bearer ${jwtCookie}`
     },
-    body
+    body: JSON.stringify({ title, content })
   });
 
   if (!postResponse.ok) {
@@ -68,7 +79,7 @@ export async function POST(event:any) {
   }
 
   const postsData = await postResponse.json()
-  const { posts, success } = postsData;
+  const { success } = postsData;
 
   if (!success) {
     error(401, 'Failed to create posts from backend');
