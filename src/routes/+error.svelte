@@ -2,9 +2,6 @@
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
 
-  onMount(() => {
-    console.log('page: ', $page);
-  })
 </script>
 
 <main>

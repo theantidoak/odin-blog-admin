@@ -54,7 +54,7 @@ export async function POST(event:any) {
   const content = formData.get('content');
 
   if (!title || !content) {
-    error(400, 'Title and content are required');
+    error(400, 'Title and content are both required.');
   }
 
   const jwtCookieName = 'ob_secure_auth';

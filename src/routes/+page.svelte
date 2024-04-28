@@ -5,11 +5,6 @@
   const { body, success } = $page.data;
   posts.set(body.posts ? body.posts : $posts);
 
-  onMount(() => {
-    console.log('page: ', $page);
-    console.log('body: ', body);
-  });
-
 </script>
 
 <main id="main" class="home">

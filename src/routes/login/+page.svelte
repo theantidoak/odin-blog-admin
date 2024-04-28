@@ -3,7 +3,6 @@
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    console.log(formData);
     const formDataSerialized = Object.fromEntries(formData);
     const jsonData = JSON.stringify(formDataSerialized);
     

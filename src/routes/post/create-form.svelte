@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { responseMessage } from '../../stores/user';
+  import { post } from '../../stores/user';
 
   onMount(() => {
     const script = document.createElement('script');
@@ -17,6 +18,8 @@
         ],
         ai_request: (request: any, respondWith: any) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
       });
+
+      tinymce.get('content').targetElm.innerHTML = $post?.content || '';
     };
     document.head.appendChild(script);
   });
@@ -59,7 +62,7 @@
   <form class="form" action="/api/posts" method="post" on:submit={createPost}>
     <div class="form__field">
       <label for="title">Post Title</label>
-      <input type="text" name="title" id="title" />
+      <input type="text" name="title" id="title" value={$post?.title || ''} />
     </div>
     <div class="form__field">
       <label for="content"></label>
