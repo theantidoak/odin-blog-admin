@@ -78,11 +78,12 @@ export async function POST(event:any) {
     body: JSON.stringify({ title: sanitizedTitle, content: sanitizedContent })
   });
 
-  if (!postResponse.ok) {
-    error(postResponse.status, `${postResponse.statusText} Failed to reach the API`);
-  }
+  const postsData = await postResponse.json();
 
-  const postsData = await postResponse.json()
+  if (!postResponse.ok) {
+    error(postResponse.status, `${postsData.errors[0].msg || (postResponse.statusText + 'Failed to reach the API')}`);
+  }
+  
   const { success, message } = postsData;
 
   if (!success) {

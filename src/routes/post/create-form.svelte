@@ -35,7 +35,7 @@
 
     try {
       const response = await fetch(form.action, {
-        method: form.method,
+        method: $post?.title ? 'PUT' : 'POST',
         body: formData
       });
 
@@ -59,7 +59,7 @@
 </script>
 
 <div>
-  <form class="form" action="/api/posts" method="post" on:submit={createPost}>
+  <form class="form" action="/api/posts{$post?.title ? '/' + $post.slug : ''}" on:submit={createPost}>
     <div class="form__field">
       <label for="title">Post Title</label>
       <input type="text" name="title" id="title" value={$post?.title || ''} />
@@ -68,6 +68,7 @@
       <label for="content"></label>
       <textarea id="content" name="content"></textarea>
     </div>
+    <input type="hidden" name="id" value={$post?._id || ''}>
     <div class="form__field">
       <button>Submit</button>
     </div>

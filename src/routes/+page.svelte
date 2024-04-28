@@ -1,9 +1,32 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { posts } from '../stores/auth';
   const { body, success } = $page.data;
   posts.set(body.posts ? body.posts : $posts);
+
+  async function deletePost(e: Event) {
+    e.stopPropagation();
+
+    const button = e.currentTarget as HTMLButtonElement;
+    const { slug } = button.dataset;
+
+    try {
+      const response = await fetch(`/api/posts/${slug}`, {
+        method: 'DELETE'
+      });
+
+      const result = await response.json();
+
+      if (!result) {
+        console.error('Error deleting post:', result);
+        return;
+      }
+
+      location.reload();
+    } catch (err) {
+      console.error('Nework error: ', err);
+    }
+  }
 
 </script>
 
@@ -22,6 +45,7 @@
               <p class="home__post-excerpt">{post.excerpt}</p>
             </div>
           </a>
+          <button on:click={deletePost} data-slug="{post.slug}">Delete</button>
         </li>
       {/each}
     </ul>

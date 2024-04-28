@@ -2,6 +2,7 @@ import { error } from "@sveltejs/kit";
 import dotenv from 'dotenv';
 import { json } from "@sveltejs/kit";
 import * as cheerio from 'cheerio';
+import sanitizeHtml from 'sanitize-html';
 dotenv.config();
 
 function getExcerpt(postContent: string) {
@@ -50,8 +51,19 @@ export async function GET(event:any) {
 
 export async function PUT(event:any) {
   const { postSlug } = event.params;
-  const reqBody = await event.request.json();
-  const body = typeof reqBody === 'string' ? reqBody : JSON.stringify(reqBody);
+
+  const formData = await event.request.formData();
+  const title = formData.get('title');
+  const content = formData.get('content');
+  const id = formData.get('id');
+
+  if (!title || !content) {
+    error(400, 'Title and content are both required.');
+  }
+
+  const sanitizedTitle = typeof title === 'string' ? title.trim().substring(0, 151) : '';
+  const sanitizedContent = typeof content === 'string' ? sanitizeHtml(content.trim()) : '';
+
   const jwtCookieName = 'ob_secure_auth';
   const jwtCookie = event.cookies.get(jwtCookieName);
 
@@ -63,28 +75,28 @@ export async function PUT(event:any) {
       'APIToken': `Token ${process.env.APITOKEN}`,
       'Authorization': `Bearer ${jwtCookie}`
     },
-    body
+    body: JSON.stringify({ title: sanitizedTitle, content: sanitizedContent, id })
   });
 
-  if (!putResponse.ok) {
-    error(putResponse.status, `${putResponse.statusText} Failed to reach the API`);
-  }
+  const putData = await putResponse.json();
 
-  const postData = await putResponse.json()
-  const { post, success } = postData;
+  if (!putResponse.ok) {
+    console.log(putData);
+    error(putResponse.status, `${putData.message || putResponse.statusText + 'Failed to reach the API'}`);
+  }
+  
+  const { post, success, message } = putData;
 
   if (!success) {
     error(401, 'Failed to update post from backend');
   }
 
-  return json({ success, status: putResponse.status });
+  return json({ success, message, status: putResponse.status });
 }
 
 
 export async function DELETE(event:any) {
   const { postSlug } = event.params;
-  const reqBody = await event.request.json();
-  const body = typeof reqBody === 'string' ? reqBody : JSON.stringify(reqBody);
   const jwtCookieName = 'ob_secure_auth';
   const jwtCookie = event.cookies.get(jwtCookieName);
 
@@ -95,8 +107,7 @@ export async function DELETE(event:any) {
       'Content-Type': 'application/json',
       'APIToken': `Token ${process.env.APITOKEN}`,
       'Authorization': `Bearer ${jwtCookie}`
-    },
-    body
+    }
   });
 
   if (!deleteResponse.ok) {
