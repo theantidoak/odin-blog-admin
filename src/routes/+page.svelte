@@ -7,7 +7,7 @@
 
   onMount(() => {
     console.log('page: ', $page);
-    console.log('data: ', body);
+    console.log('body: ', body);
   });
 
 </script>
@@ -18,7 +18,7 @@
     <ul class="home__posts">
       {#each $posts as post}
         <li class="home__post">
-          <a class="home__post-link" href="/{post.slug}">
+          <a class="home__post-link" href="/post/{post.slug}">
             {#if post.image !== ''}
               <img src="{post.img}" alt="" />
             {/if}

@@ -11,17 +11,12 @@ export const load = async ({fetch}) => {
     const { recentPosts: posts, success } = postsData;
 
     if (!success) {
-      error(401, 'Failed to get posts from server');
+      error(response.status || 401, `Failed to get posts from server. ${postsData}`);
     }
 
     return { status: 200, success, body: { posts } };   
   } catch (err) {
     console.error(err);
-    const errResponse: any = err;
-    if ((errResponse)?.status === 401) {
-      return { status: errResponse.status, success: false, body: { message: errResponse.body.message } };
-    }
-
     throw err;
   }
 }

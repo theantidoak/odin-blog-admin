@@ -1,8 +1,9 @@
 import type { Handle } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
   const { request, url, cookies } = event;
-  const needsVerification = url.pathname.startsWith('/api/comments') || (url.pathname.startsWith('/api/posts') && request.method === 'GET');
+  const needsVerification = url.pathname.startsWith('/api/comments') || (url.pathname.startsWith('/api/posts') && request.method === 'GET') ? true : false;
   if (needsVerification) {
     try {
       const jwtCookie = cookies.get('ob_secure_auth');
@@ -18,19 +19,20 @@ export const handle: Handle = async ({ event, resolve }) => {
 
       if (!authResponse.ok) {
         console.error(`Authentication service failure: ${authResponse.status} ${authResponse.statusText}`);
-        return new Response('Authentication service failure', { status: authResponse.status });
+        error(authResponse.status, `Authentication service failure: ${authResponse.statusText}`);
       }
 
       const authData = await authResponse.json();
       if (!authData.success) {
-        return new Response('Unauthorized', { status: 401 });
+        error(authResponse.status, `Unauthorized: ${authResponse.statusText}`);
       }
     } catch (error) {
-      console.error('Authentication error:', error);
-      return new Response('Internal Server Error', { status: 500 });
+      const err = error as any;
+      console.error(error);
+      return new Response(JSON.stringify(`${err.body?.message || 'Authentication error'}`), { status: err.status || 500 });
     }
   }
 
   const response = await resolve(event);
-  return response;
+	return response;
 };
