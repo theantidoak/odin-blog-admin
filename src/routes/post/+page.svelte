@@ -1,7 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  const { body, success} = $page.data;
+  import { responseMessage } from '../../stores/user';
+  const { body, success } = $page.data;
 
   onMount(() => {
     const script = document.createElement('script');
@@ -44,7 +45,10 @@
         return;
       }
 
-      console.log('Post created: ', result);
+      responseMessage.set(result.message);
+      setTimeout(function() {
+        responseMessage.set('');
+      }, 10000);
     } catch (err) {
       console.error('Nework error: ', err);
     }
@@ -67,4 +71,5 @@
       <button>Submit</button>
     </div>
   </form>
+  <p class="form-message">{$responseMessage}</p>
 </div>
