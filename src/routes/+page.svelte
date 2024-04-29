@@ -38,7 +38,7 @@
         <li class="home__post">
           <a class="home__post-link" href="/post/{post.slug}">
             {#if post.image !== ''}
-              <img src="{post.img}" alt="" />
+              <img src="{post.image}" alt="" />
             {/if}
             <div class="home__post-description">
               <h2 class="home__post-heading">{post.title}</h2>
