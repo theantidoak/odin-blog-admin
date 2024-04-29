@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@tinymce/tinymce-svelte": "^2.0.2",
 		"cheerio": "^1.0.0-rc.12",
 		"dotenv": "^16.4.5",
 		"he": "^1.2.0",

@@ -16,6 +16,23 @@ function getImageSrc(postContent: string) {
   return img ?? '';
 }
 
+function getSanitizeOptions() {
+  const allowedTags = sanitizeHtml.defaults.allowedTags.concat(['img']);
+  const allowedAttributes =  {
+    ...sanitizeHtml.defaults.allowedAttributes,
+    img: [ 'src', 'srcset', 'alt', 'title', 'width', 'height', 'loading' ]
+  };
+  allowedTags.forEach((tag) => {
+    if ((allowedAttributes as any)[tag]) {
+      (allowedAttributes as any)[tag].push('style');
+    } else {
+      (allowedAttributes as any)[tag] = ['style'];
+    }
+  });
+
+  return { allowedTags, allowedAttributes }
+}
+
 export async function GET(event:any) {
   const { postSlug } = event.params;
 
@@ -62,7 +79,7 @@ export async function PUT(event:any) {
   }
 
   const sanitizedTitle = typeof title === 'string' ? title.trim().substring(0, 151) : '';
-  const sanitizedContent = typeof content === 'string' ? sanitizeHtml(content.trim()) : '';
+  const sanitizedContent = typeof content === 'string' ? sanitizeHtml(content.trim(), getSanitizeOptions()) : '';
 
   const jwtCookieName = 'ob_secure_auth';
   const jwtCookie = event.cookies.get(jwtCookieName);
@@ -81,7 +98,6 @@ export async function PUT(event:any) {
   const putData = await putResponse.json();
 
   if (!putResponse.ok) {
-    console.log(putData);
     error(putResponse.status, `${putData.message || putResponse.statusText + 'Failed to reach the API'}`);
   }
   
