@@ -20,7 +20,7 @@
         return;
       }
 
-      location.reload();
+      posts.set($posts.filter((post) => post.slug !== slug));
     } catch (err) {
       console.error('Nework error: ', err);
     }
@@ -47,7 +47,9 @@
         return;
       }
 
-      location.reload();
+      console.log(result.post.is_published);
+      btn.textContent = result.post.is_published ? 'unPublish' : 'Publish';
+
     } catch (err) {
       console.error('Nework error: ', err);
     }
@@ -59,7 +61,7 @@
   {#if $posts}
     <h1 class="home__heading">Blog</h1>
     <ul class="home__posts">
-      {#each $posts as post}
+      {#each $posts as post (post._id)}
         <li class="home__post">
           <a class="home__post-link" href="/post/{post.slug}">
             {#if post.image !== ''}

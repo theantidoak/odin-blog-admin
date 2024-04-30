@@ -115,7 +115,7 @@ export async function PUT(event:any) {
     error(401, 'Failed to update post from backend');
   }
 
-  return json({ success, message, status: putResponse.status });
+  return json({ success, message, status: putResponse.status, post });
 }
 
 
