@@ -73,13 +73,21 @@ export async function PUT(event:any) {
   const title = formData.get('title');
   const content = formData.get('content');
   const id = formData.get('id');
+  const published = formData.get('published');
 
-  if (!title || !content) {
-    error(400, 'Title and content are both required.');
+  const body: { title?: string, content?: string, id?: string, published?: boolean } = { title: 'publishing', content: 'publishing', id };
+
+  if (title && typeof title == 'string') {
+    body.title = title.trim().substring(0, 151);
   }
 
-  const sanitizedTitle = typeof title === 'string' ? title.trim().substring(0, 151) : '';
-  const sanitizedContent = typeof content === 'string' ? sanitizeHtml(content.trim(), getSanitizeOptions()) : '';
+  if (content && typeof content === 'string') {
+    body.content = sanitizeHtml(content.trim(), getSanitizeOptions());
+  }
+
+  if (published && ['true', 'false'].includes(published)) {
+    body.published = published === 'true' ? true : false;
+  }
 
   const jwtCookieName = 'ob_secure_auth';
   const jwtCookie = event.cookies.get(jwtCookieName);
@@ -92,7 +100,7 @@ export async function PUT(event:any) {
       'APIToken': `Token ${process.env.APITOKEN}`,
       'Authorization': `Bearer ${jwtCookie}`
     },
-    body: JSON.stringify({ title: sanitizedTitle, content: sanitizedContent, id })
+    body: JSON.stringify(body)
   });
 
   const putData = await putResponse.json();

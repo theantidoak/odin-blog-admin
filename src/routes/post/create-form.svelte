@@ -64,6 +64,7 @@
       />
     </div>
     <input type="hidden" name="id" value={$post?._id || ''}>
+    <input type="hidden" name="published" value={$post?.is_published || false}>
     <div class="form__field">
       <button>Submit</button>
     </div>

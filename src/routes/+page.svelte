@@ -5,8 +5,6 @@
   posts.set(body.posts ? body.posts : $posts);
 
   async function deletePost(e: Event) {
-    e.stopPropagation();
-
     const button = e.currentTarget as HTMLButtonElement;
     const { slug } = button.dataset;
 
@@ -19,6 +17,33 @@
 
       if (!result) {
         console.error('Error deleting post:', result);
+        return;
+      }
+
+      location.reload();
+    } catch (err) {
+      console.error('Nework error: ', err);
+    }
+  }
+
+  async function publishPost(e: Event) {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const { slug, id, published } = btn.dataset;
+
+    const formData = new FormData();
+    formData.append('published', published as string);
+    formData.append('id', id as string);
+
+    try {
+      const response = await fetch(`/api/posts/${slug}`, {
+        method: 'PUT',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (!result) {
+        console.error('Error publishing post:', result);
         return;
       }
 
@@ -46,6 +71,7 @@
             </div>
           </a>
           <button on:click={deletePost} data-slug="{post.slug}">Delete</button>
+          <button on:click={publishPost} data-slug="{post.slug}" data-id="{post._id}" data-published="{ post.is_published ? 'false' : 'true'}">{post.is_published ? 'Unpublish' : 'Publish'}</button>
         </li>
       {/each}
     </ul>
