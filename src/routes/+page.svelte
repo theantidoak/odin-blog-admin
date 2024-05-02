@@ -46,7 +46,6 @@
         return;
       }
 
-      console.log(result.post.is_published);
       btn.textContent = result.post.is_published ? 'unPublish' : 'Publish';
       btn.style.backgroundColor = result.post.is_published ? 'var(--light-blue)' : 'var(--dark-blue)';
     } catch (err) {
@@ -58,7 +57,15 @@
 
 <main id="main" class="home">
   {#if $posts}
-    <h1 class="home__heading">Posts</h1>
+    <div class="home__heading-container">
+      <h1 class="home__heading">Posts</h1>
+      <a class="home__add-new-post-link" aria-label="Go to create post page" href="/post">
+        <svg class="home__add-new-post-link-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <title>plus-circle</title>
+          <path d="M17,13H13V17H11V13H7V11H11V7H13V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+        </svg>
+      </a>
+    </div>
     <ul class="home__posts">
       {#each $posts as post (post._id)}
         <li class="home__post">
@@ -72,7 +79,7 @@
             </div>
           </a>
           <div class="home__btn-container">
-            <button on:click={publishPost} data-slug="{post.slug}" data-id="{post._id}">{post.is_published ? 'Unpublish' : 'Publish'}</button>
+            <button on:click={publishPost} style="background-color: {post.is_published ? 'var(--light-blue)' : 'var(--dark-blue)'}" data-slug="{post.slug}" data-id="{post._id}">{post.is_published ? 'Unpublish' : 'Publish'}</button>
             <button on:click={deletePost} data-slug="{post.slug}">Delete</button>
           </div>
         </li>
@@ -85,12 +92,41 @@
 
   .home {
 
+    &__heading-container {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin: 0 0 1rem;
+    }
+
     &__heading {
-      margin: 1rem 0 3rem;
+      font-size: clamp(26px, 5vw, 30px);
+    }
+
+    &__add-new-post-link {
+      height: clamp(26px, 5vw, 30px);
+      border: none;
+      background-color: transparent;
+    }
+
+    &__add-new-post-link-svg {
+      height: 100%;
+      width: auto;
+      fill: var(--dark-blue);
+      cursor: pointer;
+      transition: all .3s linear;
+
+      &:hover {
+        transform: scale(1.05);
+        background-color: transparent;
+      }
     }
 
     &__posts {
       list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
     }
 
     &__post {
@@ -100,13 +136,20 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
       padding: 1rem clamp(.25rem, 4vw, 1rem);
       transition: all linear .3s;
-      background-color: var(--light-pink);
+      background-color: white;
       position: relative;
+    }
+
+    &__post-heading {
+      margin: 0 0 1rem;
+      font-size: clamp(22px, 5vw, 26px);
     }
 
     &__post-link {
       text-decoration: none;
       color: black;
+      line-height: 1.7;
+      margin: 0 0 1rem;
     }
 
     &__post:has(.home__post-link:hover) {
@@ -115,7 +158,7 @@
 
     &__btn-container {
       position: absolute;
-      bottom: -.5rem;
+      bottom: -1rem;
       right: 1rem;
       display: flex;
       width: 13rem;

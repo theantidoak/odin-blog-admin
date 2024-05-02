@@ -2,25 +2,8 @@ import { error } from "@sveltejs/kit";
 import dotenv from 'dotenv';
 import { json } from "@sveltejs/kit";
 import sanitizeHtml from 'sanitize-html';
-import { getExcerpt, getImageSrc } from "$lib";
+import { getExcerpt, getImageSrc, getSanitizeOptions } from "$lib";
 dotenv.config();
-
-function getSanitizeOptions() {
-  const allowedTags = sanitizeHtml.defaults.allowedTags.concat(['img']);
-  const allowedAttributes =  {
-    ...sanitizeHtml.defaults.allowedAttributes,
-    img: [ 'src', 'srcset', 'alt', 'title', 'width', 'height', 'loading' ]
-  };
-  allowedTags.forEach((tag) => {
-    if ((allowedAttributes as any)[tag]) {
-      (allowedAttributes as any)[tag].push('style');
-    } else {
-      (allowedAttributes as any)[tag] = ['style'];
-    }
-  });
-
-  return { allowedTags, allowedAttributes }
-}
 
 export async function GET(event:any) {
   const { postSlug } = event.params;
