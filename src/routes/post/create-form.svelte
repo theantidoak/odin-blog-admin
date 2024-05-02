@@ -14,8 +14,6 @@
   async function createPost(e: Event) {
     e.preventDefault();
 
-    tinymce.triggerSave();
-
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
     formData.append('content', contentValue);
@@ -56,7 +54,7 @@
       <Editor 
         apiKey="wzdghp9v2dxfstcizj5b7v7d047m5yh6odsemgd5awbvmoz1" 
         {conf}
-        inline={false}
+        inline={true}
         disabled={false}
         modelEvents="input change undo redo"
         bind:value={contentValue}
@@ -75,3 +73,5 @@
     <div>{@html contentValue}</div>
   </div> -->
 </div>
+
+<style lang="scss"></style>

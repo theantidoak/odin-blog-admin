@@ -46,7 +46,7 @@ export async function GET(event:any) {
   });
 
   if (!getResponse.ok) {
-    error(getResponse.status, `${getResponse.statusText} Failed to reach the API`);
+    error(getResponse.status, `Failed to reach the API: ${getResponse.statusText}`);
   }
 
   const postData = await getResponse.json()

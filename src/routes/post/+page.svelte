@@ -4,3 +4,5 @@
 </script>
 
 <CreateForm />
+
+<style lang="scss"></style>
