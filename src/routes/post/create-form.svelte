@@ -16,8 +16,8 @@
 
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    formData.append('content', contentValue);
-
+    formData.set('content', contentValue);
+    
     try {
       const response = await fetch(form.action, {
         method: $post?.title ? 'PUT' : 'POST',
@@ -74,4 +74,5 @@
   </div> -->
 </div>
 
+<!-- svelte-ignore css-unused-selector -->
 <style lang="scss"></style>

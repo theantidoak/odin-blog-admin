@@ -5,3 +5,33 @@
   --light-blue: #7091E6;
   --dark-blue: #3D52A0;
 }
+
+:global(body) {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+main {
+  padding-top: 4rem;
+  height: calc(100vh);
+
+  > * {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 5vw;
+
+    @media (min-width: 1024px) {
+      padding: 0 4rem;
+    }
+  }
+}

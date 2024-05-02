@@ -23,7 +23,7 @@ const config = {
 		adapter: adapter()
 	},
   onwarn: (warning, handler) => {
-    if (warning.code === 'css-unused-selector') return
+    if (warning.code === 'css-unused-selector') return;
     handler(warning)
   }
 };

@@ -3,6 +3,9 @@
 
 </script>
 
-<CreateForm />
+<main id="main">
+  <CreateForm />
+</main>
 
+<!-- svelte-ignore css-unused-selector -->
 <style lang="scss"></style>

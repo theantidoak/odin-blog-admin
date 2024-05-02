@@ -28,10 +28,9 @@
 
   async function publishPost(e: Event) {
     const btn = e.currentTarget as HTMLButtonElement;
-    const { slug, id, published } = btn.dataset;
+    const { slug, id } = btn.dataset;
 
     const formData = new FormData();
-    formData.append('published', published as string);
     formData.append('id', id as string);
 
     try {
@@ -49,7 +48,7 @@
 
       console.log(result.post.is_published);
       btn.textContent = result.post.is_published ? 'unPublish' : 'Publish';
-
+      btn.style.backgroundColor = result.post.is_published ? 'var(--light-blue)' : 'var(--dark-blue)';
     } catch (err) {
       console.error('Nework error: ', err);
     }
@@ -59,7 +58,7 @@
 
 <main id="main" class="home">
   {#if $posts}
-    <h1 class="home__heading">Blog</h1>
+    <h1 class="home__heading">Posts</h1>
     <ul class="home__posts">
       {#each $posts as post (post._id)}
         <li class="home__post">
@@ -72,8 +71,10 @@
               <p class="home__post-excerpt">{post.excerpt}</p>
             </div>
           </a>
-          <button on:click={deletePost} data-slug="{post.slug}">Delete</button>
-          <button on:click={publishPost} data-slug="{post.slug}" data-id="{post._id}" data-published="{ post.is_published ? 'false' : 'true'}">{post.is_published ? 'Unpublish' : 'Publish'}</button>
+          <div class="home__btn-container">
+            <button on:click={publishPost} data-slug="{post.slug}" data-id="{post._id}">{post.is_published ? 'Unpublish' : 'Publish'}</button>
+            <button on:click={deletePost} data-slug="{post.slug}">Delete</button>
+          </div>
         </li>
       {/each}
     </ul>
@@ -83,6 +84,10 @@
 <style lang="scss">
 
   .home {
+
+    &__heading {
+      margin: 1rem 0 3rem;
+    }
 
     &__posts {
       list-style: none;
@@ -95,16 +100,49 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
       padding: 1rem clamp(.25rem, 4vw, 1rem);
       transition: all linear .3s;
-      cursor: pointer;
-
-      &:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, .3);
-      }
+      background-color: var(--light-pink);
+      position: relative;
     }
 
     &__post-link {
       text-decoration: none;
       color: black;
+    }
+
+    &__post:has(.home__post-link:hover) {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, .3);
+    }
+
+    &__btn-container {
+      position: absolute;
+      bottom: -.5rem;
+      right: 1rem;
+      display: flex;
+      width: 13rem;
+
+      button {
+        flex: 1;
+        background-color: var(--dark-blue);
+        border: 1px solid var(--dark-silver);
+        color: white;
+        padding: .5rem 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+        border-radius: 5px;
+        transition: all linear .3s;
+        cursor: pointer;
+
+        &:hover {
+          box-shadow: 0 4px 8px rgba(0, 0, 0, .3);
+        }
+
+        &:first-of-type {
+          margin-right: .5rem;
+        }
+
+        &:last-of-type {
+          margin-left: .5rem;
+        }
+      }
     }
   }
 

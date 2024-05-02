@@ -1,20 +1,9 @@
 import { error } from "@sveltejs/kit";
 import dotenv from 'dotenv';
 import { json } from "@sveltejs/kit";
-import * as cheerio from 'cheerio';
 import sanitizeHtml from 'sanitize-html';
+import { getExcerpt, getImageSrc } from "$lib";
 dotenv.config();
-
-function getExcerpt(postContent: string) {
-  if (!postContent) return '';
-  return postContent.replace(/(<([^>]+)>)/ig, '').slice(0, 40);
-}
-
-function getImageSrc(postContent: string) {
-  const $ = cheerio.load(postContent);
-  const img = $('img').attr('src');
-  return img ?? '';
-}
 
 function getSanitizeOptions() {
   const allowedTags = sanitizeHtml.defaults.allowedTags.concat(['img']);
