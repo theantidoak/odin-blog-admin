@@ -9,8 +9,7 @@ export const load = async (event) => {
     const response = await event.fetch('/api/posts');
 
     if (!response.ok) {
-      console.log(response)
-      error(response.status, `Failed to get posts from server. ${response.statusText}`);
+      error(response.status, `Failed to get posts from server. Please sign in.`);
     }
     const postsData = await response.json()
     const { recentPosts: posts, success } = postsData;
