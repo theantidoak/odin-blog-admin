@@ -7,10 +7,6 @@
 <main>
   <h1>Error: {$page?.status}</h1>
   <p>{$page?.error?.message}</p>
-  <details>
-    <summary>More info</summary>
-    <pre></pre>
-  </details>
 </main>
 
 <style>

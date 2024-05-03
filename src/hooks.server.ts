@@ -4,6 +4,7 @@ import { error } from '@sveltejs/kit';
 export const handle: Handle = async ({ event, resolve }) => {
   const { request, url, cookies } = event;
   const needsVerification = url.pathname.startsWith('/api/comments') || (url.pathname.startsWith('/api/posts') && request.method === 'GET') ? true : false;
+
   if (needsVerification) {
     try {
       const jwtCookie = cookies.get('ob_secure_auth');
@@ -23,9 +24,9 @@ export const handle: Handle = async ({ event, resolve }) => {
       }
 
       const authData = await authResponse.json();
-      if (!authData.success) {
-        error(authResponse.status, `Unauthorized: ${authResponse.statusText}`);
-      }
+      const response = await resolve(event);
+      response.headers.set('X-Auth-Data', authData.success);
+      return response;
     } catch (error) {
       const err = error as any;
       console.error(error);
@@ -34,5 +35,5 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   const response = await resolve(event);
-	return response;
+  return response;
 };

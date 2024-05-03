@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { posts } from '../stores/auth';
+  import { posts } from '../stores/writables';
   const { body, success } = $page.data;
   posts.set(body.posts ? body.posts : $posts);
 
@@ -61,7 +61,7 @@
       <h1 class="home__heading">Posts</h1>
       <a class="home__add-new-post-link" aria-label="Go to create post page" href="/post">
         <svg class="home__add-new-post-link-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <title>plus-circle</title>
+          <title>Create New Post</title>
           <path d="M17,13H13V17H11V13H7V11H11V7H13V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
         </svg>
       </a>

@@ -27,9 +27,9 @@
 }
 
 :global(main) {
-  padding-top: 4rem;
+  padding-top: 2rem;
   padding-bottom: 2rem;
-  height: calc(100vh);
+  min-height: calc(100vh - 72px - 52px - 4rem);
   box-sizing: content-box;
 
   > * {

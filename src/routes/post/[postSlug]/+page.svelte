@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { post } from "../../../stores/user";
   import { page } from '$app/stores';
-  import { comments } from "../../../stores/auth";
+  import { post, comments } from "../../../stores/writables";
   
   const { body } = $page.data;
   post.set(body.post);

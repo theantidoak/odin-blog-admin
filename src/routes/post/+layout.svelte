@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { hasLoaded, responseMessage } from '../../stores/user';
-  import { post } from '../../stores/user';
+  import { post, hasLoaded, responseMessage } from '../../stores/writables';
   import Editor from '@tinymce/tinymce-svelte';
   import he from 'he';
 
