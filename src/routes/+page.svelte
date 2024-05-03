@@ -55,7 +55,7 @@
 
 </script>
 
-<main id="main" class="home">
+<div class="home">
   {#if $posts}
     <div class="home__heading-container">
       <h1 class="home__heading">Posts</h1>
@@ -86,7 +86,7 @@
       {/each}
     </ul>
   {/if}
-</main>
+  </div>
 
 <style lang="scss">
 
@@ -96,7 +96,7 @@
       display: flex;
       gap: 1rem;
       align-items: center;
-      margin: 0 0 1rem;
+      margin: 0 0 1.5rem;
     }
 
     &__heading {
@@ -150,6 +150,11 @@
       color: black;
       line-height: 1.7;
       margin: 0 0 1rem;
+      width: 100%;
+
+      @media (min-width: 768px) {
+        width: calc(100% - 9rem);
+      }
     }
 
     &__post:has(.home__post-link:hover) {
@@ -163,6 +168,16 @@
       display: flex;
       width: 13rem;
 
+      @media (min-width: 768px) {
+        flex-direction: column;
+        width: 7rem;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        justify-content: center;
+        gap: 1rem;
+      }
+
       button {
         flex: 1;
         background-color: var(--dark-blue);
@@ -173,6 +188,11 @@
         border-radius: 5px;
         transition: all linear .3s;
         cursor: pointer;
+
+        @media (min-width: 768px) {
+          flex: initial;
+          margin: 0 !important;
+        }
 
         &:hover {
           box-shadow: 0 4px 8px rgba(0, 0, 0, .3);

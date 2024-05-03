@@ -1,5 +1,4 @@
 <script lang="ts">
-  import CreateForm from "../create-form.svelte";
   import { post } from "../../../stores/user";
   import { page } from '$app/stores';
   import { comments } from "../../../stores/auth";
@@ -32,32 +31,29 @@
 
 </script>
 
-<main id="main">
-  <CreateForm />
-  <div class="comments">
-    <h2>Comments:</h2>
-    <ul class="comments__list">
-      {#each $comments as comment}
-        <li class="comments__list-item">
-          <div class="comments__list-item-field">
-            <p class="comments__content">{comment.content}</p>
-            <p class="comments__likes">
-              <span>{comment.likes}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <title>heart-multiple</title>
-                <path d="M13.5,20C6.9,13.9 3.5,10.8 3.5,7.1C3.5,4 5.9,1.6 9,1.6C10.7,1.6 12.4,2.4 13.5,3.7C14.6,2.4 16.3,1.6 18,1.6C21.1,1.6 23.5,4 23.5,7.1C23.5,10.9 20.1,14 13.5,20M12,21.1C5.4,15.2 1.5,11.7 1.5,7C1.5,6.8 1.5,6.6 1.5,6.4C0.9,7.3 0.5,8.4 0.5,9.6C0.5,13.4 3.9,16.5 10.5,22.4L12,21.1Z" />
-              </svg>
-            </p>
-          </div>
-          <div class="comments__list-item-field author-and-button">
-            <p>By: {comment.author}</p>
-            <button on:click={deleteComment} data-comment-id="{comment._id}">Delete</button>
-          </div>
-        </li>
-      {/each}
-    </ul>
-  </div>
-</main>
+<div class="comments">
+  <h2>Comments:</h2>
+  <ul class="comments__list">
+    {#each $comments as comment}
+      <li class="comments__list-item">
+        <div class="comments__list-item-field">
+          <p class="comments__content">{comment.content}</p>
+          <p class="comments__likes">
+            <span>{comment.likes}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <title>heart-multiple</title>
+              <path d="M13.5,20C6.9,13.9 3.5,10.8 3.5,7.1C3.5,4 5.9,1.6 9,1.6C10.7,1.6 12.4,2.4 13.5,3.7C14.6,2.4 16.3,1.6 18,1.6C21.1,1.6 23.5,4 23.5,7.1C23.5,10.9 20.1,14 13.5,20M12,21.1C5.4,15.2 1.5,11.7 1.5,7C1.5,6.8 1.5,6.6 1.5,6.4C0.9,7.3 0.5,8.4 0.5,9.6C0.5,13.4 3.9,16.5 10.5,22.4L12,21.1Z" />
+            </svg>
+          </p>
+        </div>
+        <div class="comments__list-item-field author-and-button">
+          <p>By: {comment.author}</p>
+          <button on:click={deleteComment} data-comment-id="{comment._id}">Delete</button>
+        </div>
+      </li>
+    {/each}
+  </ul>
+</div>
 
 <style lang="scss">
 
@@ -107,11 +103,14 @@
       position: absolute;
       top: 0;
       right: 0;
+      color: var(--light-blue);
+      font-weight: bold;
 
       svg {
         height: 1.25rem;
         width: 1.25rem;
         min-width: 1.25rem;
+        fill: currentColor;
       }
     }
 
