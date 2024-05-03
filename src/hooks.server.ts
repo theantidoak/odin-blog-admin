@@ -3,7 +3,8 @@ import { error } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
   const { request, url, cookies } = event;
-  const needsVerification = url.pathname.startsWith('/api/comments') || (url.pathname.startsWith('/api/posts') && request.method === 'GET') ? true : false;
+  // const needsVerification = url.pathname.startsWith('/api/comments') || (url.pathname.startsWith('/api/posts') && request.method === 'GET') ? true : false;
+  const needsVerification = url.pathname.startsWith('/api');
 
   if (needsVerification) {
     try {
