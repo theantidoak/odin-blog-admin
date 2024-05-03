@@ -66,6 +66,7 @@
       display: flex;
       flex-direction: column;
       list-style: none;
+      gap: 1rem;
     }
 
     &__list-item {
