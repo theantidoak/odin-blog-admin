@@ -75,16 +75,15 @@ export async function PUT(event:any) {
     body: JSON.stringify(body)
   });
 
-  const putData = await putResponse.json();
-
   if (!putResponse.ok) {
-    error(putResponse.status, `${putData.message || putResponse.statusText + 'Failed to reach the API'}`);
+    error(putResponse.status, `${putResponse.statusText + ': Failed to reach the API'}`);
   }
-  
+
+  const putData = await putResponse.json();
   const { post, success, message } = putData;
 
   if (!success) {
-    error(401, 'Failed to update post from backend');
+    error(401, `${putData.errors[0].msg}`);
   }
 
   return json({ success, message, status: putResponse.status, post });

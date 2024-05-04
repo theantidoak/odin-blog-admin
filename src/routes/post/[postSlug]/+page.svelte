@@ -1,12 +1,14 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { post, comments } from "../../../stores/writables";
+  import { post, comments, isAdmin } from "../../../stores/writables";
   
   const { body } = $page.data;
   post.set(body.post);
   comments.set(body.comments);
 
   async function deleteComment(e: Event) {
+    if (!$isAdmin) return;
+
     const btn = e.currentTarget as HTMLButtonElement;
     const { commentId } = btn.dataset;
 
@@ -47,7 +49,7 @@
         </div>
         <div class="comments__list-item-field author-and-button">
           <p>By: {comment.author}</p>
-          <button on:click={deleteComment} data-comment-id="{comment._id}">Delete</button>
+          <button on:click={deleteComment} data-comment-id="{comment._id}" disabled={!$isAdmin}>Delete</button>
         </div>
       </li>
     {/each}

@@ -75,7 +75,7 @@ export async function POST(event:any) {
   const { success, message } = postsData;
 
   if (!success) {
-    error(401, 'Failed to create posts from backend');
+    error(401, `${postsData.errors[0].msg}`);
   }
 
   return json({ success, status: postResponse.status, message });

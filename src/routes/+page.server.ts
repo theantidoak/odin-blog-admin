@@ -14,7 +14,8 @@ export const load = async (event) => {
     const postsData = await response.json()
     const { recentPosts: posts, success } = postsData;
 
-    return { status: 200, success, body: { posts }, isAuthorized: response.headers.get('x-auth-data') };   
+    const authData = JSON.parse(response.headers.get('x-auth-data') || '');
+    return { status: 200, success, body: { posts }, authData};   
   } catch (err) {
     console.error(err);
     throw err;

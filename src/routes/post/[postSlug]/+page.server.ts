@@ -24,8 +24,9 @@ export const load = async (event) => {
 
     const commentsData = await commentsResponse.json();
     const { comments, success: commentsSuccess, message: commentsMessage } = commentsData;
+    const authData = JSON.parse(postResponse.headers.get('x-auth-data') || '');
 
-    return { status: 200, postSuccess, body: { post, comments, mceKey: process.env.TINYMCEKEY } };   
+    return { status: 200, postSuccess, body: { post, comments, mceKey: process.env.TINYMCEKEY }, authData };   
   } catch (err) {
     console.error('Caught Error: ', err);
     throw err;

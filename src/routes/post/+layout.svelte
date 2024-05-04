@@ -19,6 +19,7 @@
     config.set(null);
     post.set(null);
     hasLoaded.set(false);
+    responseMessage.set('');
   }
 
   async function toggleInline() {

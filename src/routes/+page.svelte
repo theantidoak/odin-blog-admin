@@ -1,10 +1,12 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { posts } from '../stores/writables';
+  import { isAdmin, posts } from '../stores/writables';
   const { body, success } = $page.data;
   posts.set(body.posts ? body.posts : $posts);
 
   async function deletePost(e: Event) {
+    if (!$isAdmin) return;
+
     const button = e.currentTarget as HTMLButtonElement;
     const { slug } = button.dataset;
 
@@ -27,6 +29,8 @@
   }
 
   async function publishPost(e: Event) {
+    if (!$isAdmin) return;
+
     const btn = e.currentTarget as HTMLButtonElement;
     const { slug, id } = btn.dataset;
 
@@ -79,8 +83,8 @@
             </div>
           </a>
           <div class="home__btn-container">
-            <button on:click={publishPost} style="background-color: {post.is_published ? 'var(--light-blue)' : 'var(--dark-blue)'}" data-slug="{post.slug}" data-id="{post._id}">{post.is_published ? 'Unpublish' : 'Publish'}</button>
-            <button on:click={deletePost} data-slug="{post.slug}">Delete</button>
+            <button on:click={publishPost} style="background-color: {post.is_published ? 'var(--light-blue)' : 'var(--dark-blue)'}" data-slug="{post.slug}" data-id="{post._id}" disabled={!$isAdmin}>{post.is_published ? 'Unpublish' : 'Publish'}</button>
+            <button on:click={deletePost} data-slug="{post.slug}" disabled={!$isAdmin}>Delete</button>
           </div>
         </li>
       {/each}

@@ -3,9 +3,9 @@ import { error } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
   const { url, cookies } = event;
-  const apiSlugs = [ '/api/posts', '/api/comments', '/api/logout' ];
+  const apiSlugs = [ '/post', '/api/posts', '/api/comments', '/api/logout' ];
   const needsVerification = apiSlugs.find((slug) => url.pathname.startsWith(slug));
-  
+
   if (needsVerification) {
     try {
       const jwtCookie = cookies.get('ob_secure_auth');
@@ -26,7 +26,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
       const authData = await authResponse.json();
       const response = await resolve(event);
-      response.headers.set('X-Auth-Data', authData.success);
+      response.headers.set('X-Auth-Data', JSON.stringify(authData));
       return response;
     } catch (error) {
       const err = error as any;
