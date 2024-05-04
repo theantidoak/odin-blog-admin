@@ -4,8 +4,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const load = async ({params, fetch}) => {
+export const load = async (event) => {
   try {
+    const {params, fetch} = event;
+    const isMap = /\.js\.map$/.test(params.postSlug);
     const postResponse = await fetch(`/api/posts/${params.postSlug}`);
 
     if (!postResponse.ok) {
@@ -23,7 +25,7 @@ export const load = async ({params, fetch}) => {
     const commentsData = await commentsResponse.json();
     const { comments, success: commentsSuccess, message: commentsMessage } = commentsData;
 
-    return { status: 200, postSuccess, body: { post, comments } };   
+    return { status: 200, postSuccess, body: { post, comments, mceKey: process.env.TINYMCEKEY } };   
   } catch (err) {
     console.error('Caught Error: ', err);
     throw err;

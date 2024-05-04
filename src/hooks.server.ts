@@ -2,10 +2,10 @@ import type { Handle } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-  const { request, url, cookies } = event;
-  // const needsVerification = url.pathname.startsWith('/api/comments') || (url.pathname.startsWith('/api/posts') && request.method === 'GET') ? true : false;
-  const needsVerification = url.pathname.startsWith('/api') && url.pathname !== '/api/login';
-
+  const { url, cookies } = event;
+  const apiSlugs = [ '/api/posts', '/api/comments', '/api/logout' ];
+  const needsVerification = apiSlugs.find((slug) => url.pathname.startsWith(slug));
+  
   if (needsVerification) {
     try {
       const jwtCookie = cookies.get('ob_secure_auth');

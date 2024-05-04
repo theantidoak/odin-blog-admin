@@ -1,28 +1,39 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { post, hasLoaded, responseMessage } from '../../stores/writables';
-  import Editor from '@tinymce/tinymce-svelte';
-  import he from 'he';
-
-  let tinyMCEEditor: any;
-  let contentValue: string = he.decode($post?.content || '');
+  import { onDestroy, onMount, tick } from 'svelte';
+  import { page } from '$app/stores';
+  import { post, hasLoaded, responseMessage, tinyEditor, config } from '../../stores/writables';
+  import TinyEditor from '../../components/tinyEditor.svelte';
 
   onMount(() => {
     hasLoaded.set(true);
-    contentValue = he.decode($post?.content || '');
-  })
+    config.set({ apiKey: $page.data.body.mceKey, inline: false })
+  });
 
-  const conf = {
-    plugins: ['anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'linkchecker'],
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat'
-  };
+  onDestroy(() => {
+    handleCleanUp();
+  });
+
+  function handleCleanUp() {
+    $tinyEditor?.remove();
+    tinyEditor.set(null);
+    config.set(null);
+    post.set(null);
+    hasLoaded.set(false);
+  }
+
+  async function toggleInline() {
+    const inline = $config?.inline;
+    config.set(null);
+    $tinyEditor?.remove();
+    await tick();
+    config.set({ apiKey: $page.data.body.mceKey, inline: !inline });
+  }
 
   async function createPost(e: Event) {
     e.preventDefault();
-
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    formData.set('content', contentValue);
+    formData.set('content', $tinyEditor?.getContent());
     
     try {
       const response = await fetch(form.action, {
@@ -57,18 +68,12 @@
         <input type="text" name="title" id="title" value={$post?.title || ''} />
       </div>
       <div class="form__field">
+        <button class="toggle-inline-btn" type="button" on:click={toggleInline}>Toggle Inline</button>
         <p id="editor-container">
-          {#if hasLoaded}
-            <Editor
-              apiKey="wzdghp9v2dxfstcizj5b7v7d047m5yh6odsemgd5awbvmoz1"
-              {conf}
-              inline={true}
-              disabled={false}
-              modelEvents="input change undo redo"
-              bind:value={contentValue}
-              bind:this={tinyMCEEditor}
-              id="content"
-            />
+          {#if hasLoaded && $config}
+            <TinyEditor 
+              apiKey={$config?.apiKey}
+              inline={$config?.inline} />
           {/if}
         </p>
       </div>
@@ -143,6 +148,12 @@
     :global(.mce-content-body) {
       min-height: 7.75rem;
     }
+  }
+
+  .toggle-inline-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   .form-message {
