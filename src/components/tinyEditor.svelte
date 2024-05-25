@@ -9,9 +9,10 @@
   import he from 'he';
   
   export let apiKey: string;
-  export let conf: { plugins: string[], toolbar: string } = {
+  export let conf: { plugins: string[], toolbar: string, convert_urls: boolean } = {
     plugins: ['anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'linkchecker'],
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat'
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+    convert_urls: false
   }
   export let inline: boolean = false;
 
