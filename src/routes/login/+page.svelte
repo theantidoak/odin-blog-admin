@@ -59,6 +59,7 @@
     flex-direction: column;
     gap: .75rem;
     width: fit-content;
+    margin: 1rem 0 0;
 
     &__field {
       display: flex;

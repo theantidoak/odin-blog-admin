@@ -69,7 +69,7 @@
         <input type="text" name="title" id="title" value={$post?.title || ''} />
       </div>
       <div class="form__field">
-        <button class="toggle-inline-btn" type="button" on:click={toggleInline}>Toggle Inline</button>
+        <button class="toggle-inline-btn" type="button" on:click={toggleInline}>{$config?.inline ? 'Classic Editor' : 'Inline Editor'}</button>
         <p id="editor-container">
           {#if hasLoaded && $config}
             <TinyEditor 
