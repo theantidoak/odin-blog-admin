@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from '$app/stores';
+  import { page } from '$app/stores'; 
   import { post, comments, isAdmin } from "../../../stores/writables";
   
   const { body } = $page.data;
